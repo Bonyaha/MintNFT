@@ -1,36 +1,23 @@
+require('dotenv').config();
+const PinataSDK = require("pinata-web3").PinataSDK
+
 async function run() {
-    const { create } = await import('ipfs-http-client');
-    const ipfs = await create();
-    
-    // we added three attributes, add as many as you want!
-    const metadata = {
-        path: '/',
-        content: JSON.stringify({
-            name: "My First NFT",
-            attributes: [
-            {
-                "trait_type": "Peace",
-                "value": "10" 
-            },
-            {
-                "trait_type": "Love",
-                "value": "100"
-            },
-            {
-                "trait_type": "Web3",
-                "value": "1000"
-            }
-            ],
-            // update the IPFS CID to be your image CID
-            image: "https://ipfs.io/ipfs/QmQ2wnwaFJ1w42UTywTWpM8RgiqrWwKFR6AMrpyiHPgi3p",
-            description: "So much PLW3!"
-        })
-    };
+const pinata = new PinataSDK({
+  pinataJwt: process.env.PINATA_JWT,
+  pinataGateway: "coffee-useful-lungfish-973.mypinata.cloud",
+});
 
-    const result = await ipfs.add(metadata);
-    console.log(result);
+const upload = await pinata.upload.json({
+  name: "Logo",
+  description: "Company logo",
+  image: "ipfs://bafkreibi3eq4qycgkccpxntpeyet53yijacibob7kdz3u5vv2npfs5qjhe",
+  external_url: "https://pinata.cloud"
+})
 
-    process.exit(0);
+console.log(upload);
+
+process.exit(0);
+
 }
 
 run();
